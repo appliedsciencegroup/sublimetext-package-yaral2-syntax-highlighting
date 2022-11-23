@@ -1,0 +1,82 @@
+// Documentation at https://www.sublimetext.com/docs/color_schemes.html
+{
+	"variables":
+	{
+		"color-1": "hsl(36, 63%, 52%)",
+		"color-2": "hsl(37, 45%, 34%)",
+		"color-3": "hsl(347, 43%, 36%)",
+		"color-4": "hsl(189, 8%, 32%)",
+		"color-5": "hsl(162, 38%, 54%)",
+		"color-6": "hsl(210, 13%, 6%)",
+		"color-7": "hsl(200, 14%, 17%)",
+		"color-8": "hsl(180, 1%, 23%)",
+		"color-9": "hsl(200, 10%, 43%)",
+		"color-10": "hsl(195, 6%, 60%)",
+		"color-11": "hsl(168, 18%, 78%)",
+		"color-12": "hsl(210, 18%, 11%)",
+		"green-1": "hsl(133°, 54%, 31%)"
+	},
+
+	"globals":
+	{
+	},
+	"rules":
+	[
+		{
+            "name": "keyword.declaration.entity.yara",
+            "scope": "keyword.declaration.entity.yara",
+            "foreground": "var(color-3)"
+        },
+        {
+            "name": "entity.name",
+            "scope": "entity.name",
+            "foreground": "var(color-2)"
+        },
+        {
+            "name": "keyword.declaration.struct",
+            "scope": "keyword.declaration.struct",
+            "foreground": "var(color-1)"
+        },
+        {
+            "name": "variable.parameter.meta.yaral",
+            "scope": "variable.parameter.meta.yaral",
+            "foreground": "var(color-9)"
+        },
+        {
+            "name": "string.quoted.double.yaral",
+            "scope": "string.quoted.double.yaral",
+            "foreground": "var(color-11)"
+        },
+        {
+        	"name":"punctuation.definition.string",
+        	"scope": "punctuation.definition.string",
+        	"foreground": "var(color-9)"
+        },
+        {
+        	"name":"keyword.operator.assignment",
+        	"scope": "keyword.operator.assignment",
+        	"foreground": "var(color-11)"
+        },
+        {
+        	"name":"keyword.operator",
+        	"scope": "keyword.operator",
+        	"foreground": "var(blue)"
+        },
+        {
+        	"namme": "variable.parameter",
+        	"scope": "variable.parameter",
+        	"foreground": "var(white)"	
+        },
+        {
+        	"name": "keyword.reference-type",
+        	"scope": "keyword.reference-type",
+        	"foreground": "var(green-1)"		
+        },
+		{
+        	"name": "variable.parameter.reference-type",
+        	"scope": "variable.parameter.reference-type",
+        	"foreground": "var(color-5)"		
+        }
+        
+	]
+}

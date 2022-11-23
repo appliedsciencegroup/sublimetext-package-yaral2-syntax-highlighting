@@ -1,0 +1,361 @@
+rule AM_Suspicious_Failed_Logins{
+
+  meta:
+    // License: https://github.com/amalone341/YARA-L-Work/blob/main/LICENSE
+    author = "Andy Malone"
+    status = "Testing"
+    description = "Uses the outcomes section to look for a large number of IPs trying to log into a single username"
+    severity = "Medium"
+    events="dsd"
+    dsds=234
+  events:
+   // Match on the username people will login to
+   $e.metadata.event_type = "USER_LOGIN"
+   $esecurity_resultsummary = "Failed login occurred" 
+    $user = $e.target.user.userid
+   $emetadataevent_timestamp.seconds = $times //đs
+   $e.principal.ip = $pip
+  
+    $e.principal.location.country_or_region = $regions //dsdsds
+  match:
+     $user over 2d
+
+     dfdf=fdfdfdfddfs //dsds
+  outcome:
+    $Total_Fails = count($e.target.user.userid)
+    dsds=dsds
+    // count of total failed logins
+    $Distinct_Src_IP = count_distinct($e.principal.ip) 
+    // Distinct IPs accosiated with login attempts
+    $Country_distinct_count = count_distinct($e.principal.location.country_or_region) 
+    // Distinct countries with UID
+    $Uniq_List_IP = array_distinct($e.principal.ip) 
+     
+
+  condition:
+      // To Edit the threshhold modify the three numbers. The variables are:
+      //.   pip: number of unique source IP addresses attempting to login
+      //.   regions: number of unqiue country codes logins have been attempted from
+      //.   times: total number of failed logins
+    $e and #pip > 3 and #regions > 3 in #times > 30 
+      and $sds %DSDSD %<DSDSSD> and #dsfdf in cdrs %<dsdsd>
+}
+
+rule DifferentCityLogin {
+  meta:
+
+  events:
+    $udm.metadata.event_type = "USER_LOGIN"
+    $udm.principal.user.userid = $user
+    $udm.principal.location.city = $city
+
+  match:
+    $user over 5m
+
+  condition:
+    $udm and #city > 1
+}
+
+rule SingleEventRule {
+  meta:
+    author = "noone@altostrat.com"
+
+  events:
+    $e.metadata.event_type = "USER_LOGIN"
+
+  condition:
+    $e
+}
+
+rule SingleEventRule {
+  meta:
+    author = "noone@google.com"
+    description = "windowed single event example rule"
+
+  events:
+    $e.metadata.event_type = "USER_LOGIN"
+    $e.principal.user.userid = $user
+
+  match:
+
+    $user over 5m
+
+  condition:
+       
+    #e > 0
+}
+
+rule UserCreationThenDeletion {
+  meta:
+
+  events:
+    $create.target.user.userid = $user
+    $create.metadata.event_type = "USER_CREATION"
+
+    $delete.target.user.userid = $user
+    $delete.metadata.event_type = "USER_DELETION"
+
+    $create.metadata.event_timestamp.seconds <=
+       $delete.metadata.event_timestamp.seconds
+
+  match:
+
+    $user over 4h
+
+  condition:
+    $create and $delete
+}
+
+rule SuspiciousIPLogins {
+  meta:
+    author = "noone@google.com"
+
+  events:
+    $e.metadata.event_type = "USER_LOGIN"
+
+    // Detects if all source IP addresses in an event do not match "100.97.16.0"
+    // For example, if an event has source IP addresses
+    // ["100.97.16.1", "100.97.16.2", "100.97.16.3"],
+    // it will be detected since "100.97.16.1", "100.97.16.2",
+    // and "100.97.16.3" all do not match "100.97.16.0".
+
+    all $e.principal.ip != "100.97.16.0"
+
+    // Assigns placeholder variable $ip to the $e.principal.ip repeated field.
+    // There will be one detection per source IP address.
+    // For example, if an event has source IP addresses
+    // ["100.97.16.1", "100.97.16.2", "100.97.16.3"],
+    // there will be one detection per address.
+
+    $e.principal.ip = $ip
+
+  match:
+    $ip over 5m
+
+  condition:
+    $e
+}
+
+rule RegexRuleExample {
+  meta:
+    author = "noone@altostrat.com"
+
+  events:
+    $e.principal.hostname = $host
+    $host = /.*HoSt.*/ nocase
+    re.regex($e.network.email.from, `.*altostrat\.com`) nocase
+
+  match:
+    $host over 10m
+
+  condition:
+    #e > 10
+}
+
+rule SlidingWindowRuleExample {
+  meta:
+    author = "noone@google.com"
+
+  events:
+    $e1.metadata.product_name = "firewall_1"
+    $e1.principal.hostname = $host
+
+    $e2.metadata.product_name = "firewall_2"
+    $e2.principal.hostname = $host
+
+  match:
+    $host over 10m after $e1
+
+  condition:
+    $e1 and !$e2
+}
+
+rule ExcludeZeroValues {
+  meta:
+    author = "noone@google.com"
+
+  events:
+    $e1.metadata.event_type = "NETWORK_DNS"
+    $e1.principal.hostname = $hostname
+
+    // $e1.principal.user.userid may be empty string.
+    $e1.principal.user.userid != "Guest"
+
+    $e2.metadata.event_type = "NETWORK_HTTP"
+    $e2.principal.hostname = $hostname
+
+    // $e2.target.asset_id cannot be empty string as explicitly specified.
+    $e2.target.asset_id != ""
+
+  match:
+    // $hostname cannot be empty string.
+    $hostname over 1h
+
+  condition:
+    $e1 and $e2
+}
+
+rule OutcomeRuleMultiEvent {
+    meta:
+      author = "noone@google.com"
+    events:
+      $u.udm.principal.hostname = $hostname
+      $asset_context.graph.entity.hostname = $hostname
+
+      $severity = $asset_context.graph.entity.asset.vulnerabilities.severity
+
+    match:
+      $hostname over 5m
+
+    outcome:
+      $risk_score =
+        max(
+            100
+          + if($hostname = "my-hostname", 100, 50)
+          + if($severity = "HIGH", 10)
+          + if($severity = "MEDIUM", 5)
+          + if($severity = "LOW", 1)
+        )
+
+      $asset_id_list =
+        array(
+          if($u.principal.asset_id = "",
+             "Empty asset id",
+             $u.principal.asset_id
+          )
+        )
+
+      $asset_id_distinct_list = array_distinct($u.principal.asset_id)
+
+      $asset_id_count = count($u.principal.asset_id)
+
+      $asset_id_distinct_count = count_distinct($u.principal.asset_id)
+
+    condition:
+      $u and $asset_context and $risk_score > 50 and not arrays.contains($asset_id_list, "id_1234")
+}
+
+rule OutcomeRuleSingleEvent {
+    meta:
+        author = "noone@google.com"
+    events:
+        $u.metadata.event_type = "FILE_COPY"
+        $u.principal.file.size = $file_size
+        $u.principal.hostname = $hostname
+
+    outcome:
+        $suspicious_host = $hostname
+        $severity_tag = if($file_size > 1024, "SEVERE", "MODERATE")
+
+    condition:
+        $u
+}
+
+rule OutcomeMultiEventPreRefactor {
+    meta:
+      author = "noone@google.com"
+      description = "Outcome refactor rule, before the refactor"
+
+    events:
+      $u.udm.principal.hostname = $hostname
+
+    match:
+      $hostname over 5m
+
+    outcome:
+      $risk_score = max(if($hostname = "my-hostname", 100, 50))
+
+    condition:
+      $u
+}
+
+rule OutcomeSingleEventPostRefactor {
+    meta:
+      author = "noone@google.com"
+      description = "Outcome refactor rule, after the refactor"
+
+    events:
+      $u.udm.principal.hostname = $hostname
+
+    // We deleted the match section.
+
+    outcome:
+      // We removed the max() aggregate.
+      $risk_score = if($hostname = "my-hostname", 100, 50)
+      $dfdf = /md5: [0-9a-zA-Z]{32}/
+
+    condition:
+      $u
+}
+
+rule FunctionToPlaceholderRule {
+    meta:
+      author = "noone@google.com"
+      description = "Rule that uses function to placeholder assignments"
+
+    events:
+        $u.metadata.event_type = "EMAIL_TRANSACTION"
+
+        // Use function-placeholder assignment to extract the
+        // address from an email.
+        // address@website.com -> address
+        $email_to_address_only = re.capture($u.network.email.from , "(.*)@")
+
+        // Use function-placeholder assignment to normalize an email:
+        // uid@??? -> uid@company.com
+        $email_from_normalized = strings.concat(
+            re.capture($u.network.email.from , "(.*)@"),
+            "@company.com"
+        )
+
+        // Use function-placeholder assignment to get the day of the week of the event.
+        // 1 = Sunday, 7 = Saturday.
+        $dayofweek = timestamp.get_day_of_week($u.metadata.event_timestamp.seconds)
+
+    match:
+        // Use placeholder (from function-placeholder assignment) in match section.
+        // Group by the normalized from email, and expose it in the detection.
+        $email_from_normalized over 5m
+
+    outcome:
+        // Use placeholder (from function-placeholder assignment) in outcome section.
+        // Assign more risk if the event happened on weekend.
+        $risk_score = max(
+            if($dayofweek = 1, 10, 0) +
+            if($dayofweek = 7, 10, 0)
+        )
+
+    condition:
+        // Use placeholder (from function-placeholder assignment) in condition section.
+        // Match if an email was sent to multiple addresses.
+        #email_to_address_only > 1
+}
+
+
+rule OutcomeConditionalRule {
+    meta:
+
+        author = "noone@google.com"
+        description = "Rule that uses outcome conditionals"
+
+    events:
+        $u.metadata.event_type = "FILE_COPY"
+        $u.principal.file.size = $file_size
+        $u.principal.hostname = $hostname
+
+        // 1 = Sunday, 7 = Saturday.
+        $dayofweek = timestamp.get_day_of_week($u.metadata.collected_timestamp.seconds)
+
+    outcome:
+        $risk_score =
+            if($file_size > 500*1024*1024, 2) + // Files 500MB are moderately risky
+            if($file_size > 1024*1024*1024, 3) + // Files over 1G get assigned extra risk
+
+
+            if($dayofweek=1 or $dayofweek=7, 4) + // Events from the weekend are suspicious
+
+            if($hostname = /highly-privileged/, 5) // Check for files from highly privileged devices
+
+    condition:
+        $u and $risk_score >= 10
+}
