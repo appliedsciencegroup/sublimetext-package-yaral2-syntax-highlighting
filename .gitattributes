@@ -1,0 +1,10 @@
+*.sublime-color-scheme linguist-language=JSONC
+*.sublime-syntax linguist-language=JSONC
+
+# .gitattributes
+.gitattributes export-ignore
+.gitignore export-ignore
+Customize-color.yaml export-ignore
+sample.yaral export-ignore
+*.md export-ignore
+LICENSE.txt export-ignore
