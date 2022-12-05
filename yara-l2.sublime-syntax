@@ -123,82 +123,82 @@ contexts:
       push: [yaral]
   yaral:
     - match: '"'
-      scope: punctuation.definition.string.begin.yara
+      scope: punctuation.definition.string.begin.yaral
       push: double_quoted_string
 
     # - match: '//'
-    #   scope: punctuation.definition.comment.yara
+    #   scope: punctuation.definition.comment.yaral
     #   push: line_comment
 
     - match: '/$'
-      scope: support.function.builtin.yara
+      scope: support.function.builtin.yaral
 
     - match: '#'
-      scope: support.function.builtin.yara
+      scope: support.function.builtin.yaral
 
     - match: '/\*'
-      scope: punctuation.definition.block.comment.begin.yara
+      scope: punctuation.definition.block.comment.begin.yaral
       push: block_comment
 
     - match: '\b(import|include)\b'
-      scope: keyword.control.import.yara
+      scope: keyword.control.import.yaral
 
     - match: '\b(int8|int16|int32|int8be|int16be|int32be|uint16|uint32|uint8be|uint16be|uint32be)\b'
-      scope: keyword.declaration.type.yara
+      scope: keyword.declaration.type.yaral
 
     - match: '\b(rule)\b'
-      scope: keyword.declaration.entity.yara
+      scope: keyword.declaration.entity.yaral
       set: 
         - rule
         - rule-name
     - match: '\b(global|private|ascii|base64|base64wide|nocase|wide|xor|fullword)\b'
-      scope: support.type.yara
+      scope: support.type.yaral
 
     - match: '\b(all|any|at|contains|entrypoint|false|filesize|for|in|matches|of|them|true)\b'
-      scope: entity.name.yara
+      scope: entity.name.yaral
 
     - match: '\b(and|or|not)\b'
-      scope: keyword.control.conditional.yara
+      scope: keyword.control.conditional.yaral
 
     - match: '=\s*{'
-      scope: definition.constant.numeric.begin.yara
+      scope: definition.constant.numeric.begin.yaral
       push: constant
 
     - match: '=\s*/'
-      scope: punctuation.definition.regex.begin.yara
+      scope: punctuation.definition.regex.begin.yaral
       push: regex
 
   double_quoted_string:
-    - meta_content_scope: string.quoted.double.yara
+    - meta_content_scope: string.quoted.double.yaral
     - match: '\\.'
-      scope: constant.character.escape.yara
+      scope: constant.character.escape.yaral
     - match: '"($|\s*)'
-      scope: punctuation.definition.string.end.yara
+      scope: punctuation.definition.string.end.yaral
       pop: true
 
   # line_comment:
-  #   - meta_scope: comment.line.yara
+  #   - meta_scope: comment.line.yaral
   #   - match: $
   #     pop: true
 
   block_comment:
-    - meta_scope: comment.block.yara
+    - meta_scope: comment.block.yaral
     - match: '\*/'
-      scope: punctuation.definition.block.comment.end.yara
+      scope: punctuation.definition.block.comment.end.yaral
       pop: true
 
   # constant:
-  #   - meta_content_scope: constant.numeric.yara
+  #   - meta_content_scope: constant.numeric.yaral
   #   - match: '(\(|\)|\|)'
-  #     scope: constant.numeric.escape.yara
+  #     scope: constant.numeric.escape.yaral
   #   - match: '}'
-  #     scope: definition.constant.numeric.end.yara
+  #     scope: definition.constant.numeric.end.yaral
   #     pop: true
 
   regex:
-    - meta_content_scope: variable.parameter.yara
+    - meta_content_scope: variable.parameter.yaral
     - match: '/'
-      scope: punctuation.definition.regex.end.yara
+      scope: punctuation.definition.regex.end.yaral
       pop: true
 ###[ MAIN DECLARATIONS ]######################################################
   rule:
@@ -244,7 +244,7 @@ contexts:
       1: meta.indent
       2: variable.parameter.yaral
     embed: meta-parameters-body
-    embed_scope: meta.block.yara
+    embed_scope: meta.block.yaral
     escape: ^(?!\1\2)(?!$)(?!\s*$)(?!\s*//)
     pop: 2
   meta-parameters-body:
@@ -297,7 +297,7 @@ contexts:
       1: meta.indent
       2: variable.parameter.yaral
     embed: annotation-parameters-body
-    embed_scope: meta.block.yara
+    embed_scope: meta.block.yaral
     escape: ^(?!\1\2)(?!$)(?!\s*$)(?!\s*//)
     pop: 2
 

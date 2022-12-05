@@ -23,8 +23,8 @@
 	"rules":
 	[
 		{
-            "name": "keyword.declaration.entity.yara",
-            "scope": "keyword.declaration.entity.yara",
+            "name": "keyword.declaration.entity.yaral",
+            "scope": "keyword.declaration.entity.yaral",
             "foreground": "var(color-3)"
         },
         {
