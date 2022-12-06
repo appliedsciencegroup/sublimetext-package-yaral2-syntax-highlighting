@@ -24,13 +24,6 @@ Manually:
 git repo into the folder
 3. Restart Sublime Text if required.
 
-## Customize color scheme
-
-#### Solution 1 - Using Yaral color scheme default with base Mariana color scheme
-1. Select Yaral.sublime-color-scheme (In ST menu, `Preferences` -> `Select Color Scheme ...` -> `Yaral`) 
-
-#### Solution 2 - Using Yaral color schema with your own color schema
-1. Select Yaral.sublime-color-scheme (In ST menu, `Preferences` -> `Customize Color Scheme ...` -> Paste all the content of File `Customize-color.yaml` overwrite to customize windown and `Save`) 
 
 ## Debug and refine color schema
 

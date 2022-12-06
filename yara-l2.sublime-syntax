@@ -147,7 +147,7 @@ contexts:
       scope: keyword.declaration.type.yaral
 
     - match: '\b(rule)\b'
-      scope: keyword.declaration.entity.yaral
+      scope: constant.language.yaral
       set: 
         - rule
         - rule-name
@@ -169,7 +169,7 @@ contexts:
       push: regex
 
   double_quoted_string:
-    - meta_content_scope: string.quoted.double.yaral
+    - meta_content_scope: punctuation.definition.yaral
     - match: '\\.'
       scope: constant.character.escape.yaral
     - match: '"($|\s*)'
@@ -196,7 +196,7 @@ contexts:
   #     pop: true
 
   regex:
-    - meta_content_scope: variable.parameter.yaral
+    - meta_content_scope: markup.raw.inline.yaral
     - match: '/'
       scope: punctuation.definition.regex.end.yaral
       pop: true
@@ -207,12 +207,12 @@ contexts:
     - match: '(meta|\s*)(\:)'
       scope: 
         storage.type.struct 
-        keyword.declaration.struct
+        entity.name.yaral
       push: meta-body
     - match: '(events|match|outcome|strings|condition|\s*)(\:)'
       scope: 
         storage.type.struct 
-        keyword.declaration.struct
+        entity.name.yaral
       push: main-body
     - match: '\}'
       scope: punctuation.section.block.end
@@ -222,7 +222,7 @@ contexts:
   - match: '(\s*)(events|match|outcome|strings|condition)(\:)'
     scope: 
         storage.type.struct 
-        keyword.declaration.struct
+        entity.name.yaral
     pop: 1
   - match: ''
     branch_point: meta-open-body
@@ -242,7 +242,7 @@ contexts:
   - match: ^([\t ]*)(\s*)
     captures:
       1: meta.indent
-      2: variable.parameter.yaral
+      2: markup.raw.inline.yaral
     embed: meta-parameters-body
     embed_scope: meta.block.yaral
     escape: ^(?!\1\2)(?!$)(?!\s*$)(?!\s*//)
@@ -259,7 +259,7 @@ contexts:
 
   meta-parameter:
     - match: '{{identifier}}'
-      scope: variable.parameter.meta.yaral
+      scope: punctuation.accessor.yaral
       set: meta-parameter-assignment
     - match: ''
       fail: meta-parameter
@@ -290,12 +290,12 @@ contexts:
   - match: '(\s*)(events|match|outcome|strings|condition)(\:)'
     scope: 
         storage.type.struct 
-        keyword.declaration.struct
+        orange2
     pop: 1
   - match: ^([\t ]*)(\s*)
     captures:
       1: meta.indent
-      2: variable.parameter.yaral
+      2: markup.raw.inline.yaral
     embed: annotation-parameters-body
     embed_scope: meta.block.yaral
     escape: ^(?!\1\2)(?!$)(?!\s*$)(?!\s*//)
@@ -307,7 +307,7 @@ contexts:
       pop: true
   rule-name:
     - match: '{{identifier}}'
-      scope: entity.name.rule.yaral
+      scope: entity.name.yaral
       pop: 1
     - include: else-pop
 
@@ -502,7 +502,7 @@ contexts:
 
   annotation-parameter:
     - match: '{{identifier}}'
-      scope: variable.parameter.yaral
+      scope: punctuation.section.yaral
       set: annotation-parameter-assignment
     - match: ''
       fail: annotation-parameter
@@ -2203,7 +2203,7 @@ contexts:
 
   receiver-unqualified-identifier:
     - match: this{{break}}
-      scope: variable.parameter.this.yaral
+      scope: markup.raw.inline.yaral
       push: receiver-identifier-end
     - match: '{{identifier}}'
       scope: variable.parameter.receiver.unqualified.yaral
@@ -2241,7 +2241,7 @@ contexts:
   receiver-qualified-identifier-name:
     - meta_scope: meta.path.yaral
     - match: this{{break}}
-      scope: variable.parameter.this.yaral
+      scope: markup.raw.inline.yaral
       set: receiver-identifier-end
     - match: '{{identifier}}'
       scope: invalid.illegal.identifier.yaral
@@ -2282,7 +2282,7 @@ contexts:
 
   parameter-identifier:
     - match: '{{identifier}}'
-      scope: variable.parameter.yaral
+      scope: markup.raw.inline.yaral
       set: maybe-only-array-modifiers
     - match: '{{variables}}{{break}}'
       scope: invalid.illegal.identifier.yaral
@@ -2332,7 +2332,7 @@ contexts:
     - match: '{{id}}'
       scope:
         meta.function.anonymous.parameters.yaral
-        variable.parameter.yaral
+        markup.raw.inline.yaral
       set: lambda-parameter-end
     - include: immediately-pop
 
@@ -2390,7 +2390,7 @@ contexts:
     - match: '{{id}}'
       scope:
         meta.variable.identifier.yaral
-        variable.parameter.yaral
+        punctuation.section.yaral
       set: variable-qualifier-end
     - include: immediately-pop
 
@@ -2573,7 +2573,7 @@ contexts:
 
   literal-double-quoted-string-body:
     - meta_include_prototype: false
-    - meta_scope: meta.string.yaral string.quoted.double.yaral
+    - meta_scope: meta.string.yaral source.yaml string.yaral
     - match: \"
       scope: punctuation.definition.string.end.yaral
       pop: 1
@@ -2616,7 +2616,7 @@ contexts:
       scope: keyword.operator.assignment.augmented.yaral
     - match: '<<|>>>?'
       scope: keyword.operator.bitwise.yaral
-    - match: '==|!=|<=|>=|<>|<|>|over|and|in|\p{N}d|all'
+    - match: '==|!=|<=|>=|<>|<|>|over|after|and|in|\p{N}d|all'
       scope: keyword.operator.comparison.yaral
     - match: '='
       scope: keyword.operator.assignment.yaral
@@ -2624,7 +2624,7 @@ contexts:
     - match: '\+\+?|\-\-?|[*/]'
       scope: keyword.operator.arithmetic.yaral
     - match: '%'
-      scope: keyword.reference-type.yaral
+      scope: punctuation.definition.annotation.reference-type.yaral
       push: reference-type-param
     - match: '!|&&|\|\|'
       scope: keyword.operator.logical.yaral
@@ -2641,15 +2641,15 @@ contexts:
         - cast-expression-type
   reference-type-param:
     - match: '{{id}}'
-      scope: variable.parameter.reference-type.yaral
+      scope: string.reference-type.yaral
       pop: 1
     - match: \<
-      scope: keyword.reference-type.yaral
+      scope: punctuation.definition.annotation.reference-type.yaral
       push:
         - match: '{{id}}'
-          scope: variable.parameter.reference-type.yaral
+          scope: string.reference-type.yaral
         - match: \>
-          scope: keyword.reference-type.yaral
+          scope: punctuation.definition.annotation.reference-type.yaral
           pop: 2
     - include: else-pop
 
@@ -3343,7 +3343,7 @@ contexts:
   type-parameter-reference:
     # https://docs.oracle.com/javase/specs/jls/se13/html/jls-4.html#jls-4.4
     - match: '{{identifier}}'
-      scope: variable.parameter.type.yaral
+      scope: markup.raw.inline.yaral
       pop: 1
     - match: \?|{{storage_types}}{{break}}
       scope: invalid.illegal.unexpected-keyword.yaral
